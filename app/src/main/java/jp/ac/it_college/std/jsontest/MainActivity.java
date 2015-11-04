@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +19,8 @@ import java.util.List;
 public class MainActivity extends ListActivity implements View.OnClickListener {
 
     private List<String> items = new ArrayList<>();
+    private EditText filter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,8 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
         setListAdapter(new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, items
         ));
+
+        filter = (EditText) findViewById(R.id.edit_filter);
     }
 
     @Override
@@ -38,17 +43,25 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
     }
 
     private void loadJSON() {
+        items.clear();
         JSONObject object = getJSONObject();
-        JSONArray array = object.names();
+        JSONArray keys = object.names();
 
-        for (int i = 0; i < array.length(); i++) {
-            try {
-                items.add(array.getString(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try {
+            for (int i = 0; i < keys.length(); i++) {
+                JSONArray category = object.getJSONObject(keys.getString(i)).getJSONArray("category");
+                for (int j = 0; j < category.length(); j++) {
+                    // フィルターに入力されたタグが付いている画像名をリストに追加
+                    if (category.getString(j).equals(filter.getText().toString())) {
+                        items.add(keys.getString(i));
+                    }
+                }
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
+        ((ArrayAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     private String getJSONStr() {
