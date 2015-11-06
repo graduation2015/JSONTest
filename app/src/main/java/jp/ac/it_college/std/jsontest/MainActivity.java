@@ -26,6 +26,9 @@ public class MainActivity extends Activity {
             case R.id.menu_filter_fragment:
                 changeFragment(new CategoryFilterFragment());
                 break;
+            case R.id.menu_add_fragment:
+                changeFragment(new AddCategoryFragment());
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

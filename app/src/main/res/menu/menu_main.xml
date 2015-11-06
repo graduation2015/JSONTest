@@ -4,4 +4,8 @@
     <item
         android:id="@+id/menu_filter_fragment"
         android:title="FilterFragment" />
+
+    <item
+        android:id="@+id/menu_add_fragment"
+        android:title="AddFragment" />
 </menu>

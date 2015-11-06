@@ -13,8 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +30,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
                 getActivity(), android.R.layout.simple_list_item_1, items));
 
         filter = (EditText) contentView.findViewById(R.id.edit_filter);
+
         return contentView;
     }
 
@@ -47,7 +46,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
     private void loadJSON() {
         items.clear();
-        JSONObject object = getJSONObject();
+        JSONObject object = JSONManager.getJSONObject(getActivity());
         JSONArray keys = object.names();
 
         try {
@@ -66,31 +65,4 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
         ((ArrayAdapter) getListAdapter()).notifyDataSetChanged();
     }
-
-    private String getJSONStr() {
-        String json = null;
-        try {
-            InputStream is = getActivity().getAssets().open("tags.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
-    }
-
-    private JSONObject getJSONObject() {
-        try {
-            return new JSONObject(getJSONStr());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }
