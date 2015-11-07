@@ -17,12 +17,15 @@ public class AddCategoryFragment extends Fragment
         implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private List<String> categories = new ArrayList<>();
+    private JSONManager jsonManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_add_category, container, false);
         findViews(contentView);
+
+        jsonManager = new JSONManager(getActivity());
         return contentView;
     }
 
@@ -53,6 +56,6 @@ public class AddCategoryFragment extends Fragment
     }
 
     private void addCategory() {
-
+//        jsonManager.createJSONObject();
     }
 }
