@@ -1,23 +1,26 @@
 package jp.ac.it_college.std.jsontest;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class AddCategoryFragment extends Fragment
-        implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+        implements View.OnClickListener {
+
+    private JSONManager jsonManager;
 
     private List<String> categories = new ArrayList<>();
-    private JSONManager jsonManager;
+    private CategoryChoiceDialogFragment dialog;
+    public static final int REQUEST_CATEGORY = 0x01;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,21 +32,10 @@ public class AddCategoryFragment extends Fragment
         return contentView;
     }
 
-    private void findViews(View contentView) {
-        ((CheckBox) contentView.findViewById(R.id.checkbox_book)).setOnCheckedChangeListener(this);
-        ((CheckBox) contentView.findViewById(R.id.checkbox_food)).setOnCheckedChangeListener(this);
-        ((CheckBox) contentView.findViewById(R.id.checkbox_game)).setOnCheckedChangeListener(this);
-        ((CheckBox) contentView.findViewById(R.id.checkbox_video)).setOnCheckedChangeListener(this);
-        contentView.findViewById(R.id.btn_add_category).setOnClickListener(this);
-    }
-
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isChecked) {
-            categories.add(compoundButton.getText().toString());
-        } else {
-            categories.remove(compoundButton.getText().toString());
-        }
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        dialog = makeCategoryChoiceDialog();
     }
 
     @Override
@@ -52,10 +44,47 @@ public class AddCategoryFragment extends Fragment
             case R.id.btn_add_category:
                 addCategory();
                 break;
+            case R.id.btn_select_category:
+                showCategoryChoiceDialog();
+                break;
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CATEGORY) {
+            switch (resultCode) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    setCategories(data);
+                    break;
+            }
+        }
+    }
+
+    private void setCategories(Intent data) {
+        List<String> checkedCategories = data.getStringArrayListExtra(CategoryChoiceDialogFragment.CHECKED_CATEGORY);
+        categories.clear();
+        categories.addAll(checkedCategories);
+    }
+
+    private void findViews(View contentView) {
+        contentView.findViewById(R.id.btn_add_category).setOnClickListener(this);
+        contentView.findViewById(R.id.btn_select_category).setOnClickListener(this);
+    }
+
+    private void showCategoryChoiceDialog() {
+        dialog.show(getFragmentManager(), "dialog");
+    }
+
     private void addCategory() {
-//        jsonManager.createJSONObject();
+    }
+
+    private CategoryChoiceDialogFragment makeCategoryChoiceDialog() {
+        CategoryChoiceDialogFragment dialog = new CategoryChoiceDialogFragment();
+        dialog.setTargetFragment(this, REQUEST_CATEGORY);
+
+        return dialog;
     }
 }
