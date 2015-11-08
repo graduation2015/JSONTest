@@ -19,7 +19,7 @@ public class AddCategoryFragment extends Fragment
     private JSONManager jsonManager;
 
     private List<String> categories = new ArrayList<>();
-    private CategoryChoiceDialogFragment dialog;
+    private CategoryChoiceDialog dialog;
     public static final int REQUEST_CATEGORY = 0x01;
 
     @Override
@@ -64,7 +64,7 @@ public class AddCategoryFragment extends Fragment
     }
 
     private void setCategories(Intent data) {
-        List<String> checkedCategories = data.getStringArrayListExtra(CategoryChoiceDialogFragment.CHECKED_CATEGORY);
+        List<String> checkedCategories = data.getStringArrayListExtra(CategoryChoiceDialog.CHECKED_ITEMS);
         categories.clear();
         categories.addAll(checkedCategories);
     }
@@ -81,10 +81,20 @@ public class AddCategoryFragment extends Fragment
     private void addCategory() {
     }
 
-    private CategoryChoiceDialogFragment makeCategoryChoiceDialog() {
-        CategoryChoiceDialogFragment dialog = new CategoryChoiceDialogFragment();
+    private CategoryChoiceDialog makeCategoryChoiceDialog() {
+        CategoryChoiceDialog dialog = new CategoryChoiceDialog();
         dialog.setTargetFragment(this, REQUEST_CATEGORY);
-
+        dialog.setArguments(makeArgs());
         return dialog;
+    }
+
+    private Bundle makeArgs() {
+        Bundle args = new Bundle();
+        String[] items = getResources().getStringArray(R.array.categories);
+        boolean[] checkedItems = new boolean[items.length];
+        args.putStringArray(CategoryChoiceDialog.ITEMS, items);
+        args.putBooleanArray(CategoryChoiceDialog.CHECKED_ITEMS, checkedItems);
+
+        return args;
     }
 }
