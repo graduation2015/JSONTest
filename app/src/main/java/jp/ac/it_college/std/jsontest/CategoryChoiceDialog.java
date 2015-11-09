@@ -66,7 +66,8 @@ public class CategoryChoiceDialog extends DialogFragment {
      * @param checkedItems
      * @return
      */
-    private OnMultiChoiceClickListener makeMultiChoiceClickListener(final String[] items, final boolean[] checkedItems) {
+    private OnMultiChoiceClickListener makeMultiChoiceClickListener(
+            final String[] items, final boolean[] checkedItems) {
         return new OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {

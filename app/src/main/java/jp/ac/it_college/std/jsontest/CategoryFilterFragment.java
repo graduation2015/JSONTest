@@ -20,7 +20,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
     private List<String> items = new ArrayList<>();
     private EditText filter;
-    private JSONManager jsonManager;
+    private JsonManager jsonManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +32,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
         filter = (EditText) contentView.findViewById(R.id.edit_filter);
 
-        jsonManager = new JSONManager(getActivity());
+        jsonManager = new JsonManager(getActivity());
 
         return contentView;
     }
@@ -48,11 +48,15 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     }
 
     private void loadJSON() {
-        JSONObject object = jsonManager.getJSONObject();
+        JSONObject object = jsonManager.getJsonObject();
         executeCategoryFilter(object);
     }
 
     private void executeCategoryFilter(JSONObject object) {
+        if (object == null) {
+            return;
+        }
+
         items.clear();
         JSONArray names = object.names();
 

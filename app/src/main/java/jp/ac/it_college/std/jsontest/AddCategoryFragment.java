@@ -8,6 +8,9 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +19,15 @@ import java.util.List;
 public class AddCategoryFragment extends Fragment
         implements View.OnClickListener {
 
-    private JSONManager jsonManager;
+    private JsonManager jsonManager;
 
     private List<String> categories = new ArrayList<>();
     private CategoryChoiceDialog dialog;
     public static final int REQUEST_CATEGORY = 0x01;
+    private static final String COMPANY_NAME = "company01";
+    private static final String COMPANY_ADDRESS = "okinawa";
+
+    private EditText keyName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +35,7 @@ public class AddCategoryFragment extends Fragment
         View contentView = inflater.inflate(R.layout.fragment_add_category, container, false);
         findViews(contentView);
 
-        jsonManager = new JSONManager(getActivity());
+        jsonManager = new JsonManager(getActivity());
         return contentView;
     }
 
@@ -69,9 +76,18 @@ public class AddCategoryFragment extends Fragment
         categories.addAll(checkedCategories);
     }
 
+    private List<String> getCategories() {
+        return categories;
+    }
+
+    private String getKeyName() {
+        return keyName.getText().toString();
+    }
+
     private void findViews(View contentView) {
         contentView.findViewById(R.id.btn_add_category).setOnClickListener(this);
         contentView.findViewById(R.id.btn_select_category).setOnClickListener(this);
+        keyName = (EditText) contentView.findViewById(R.id.edit_key_name);
     }
 
     private void showCategoryChoiceDialog() {
@@ -79,6 +95,10 @@ public class AddCategoryFragment extends Fragment
     }
 
     private void addCategory() {
+        CouponInfo info = new CouponInfo(
+                getKeyName(), COMPANY_NAME, COMPANY_ADDRESS, getCategories());
+
+        jsonManager.putJsonStr(info);
     }
 
     private CategoryChoiceDialog makeCategoryChoiceDialog() {
