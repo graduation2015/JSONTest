@@ -4,13 +4,17 @@ import java.util.List;
 
 public class CouponInfo {
     private final String key;
-    private final String companyName;
+    private final String name;
     private final String address;
     private final List<String> category;
 
-    public CouponInfo(String key, String companyName, String address, List<String> category) {
+    public static final String NAME = "name";
+    public static final String ADDRESS = "address";
+    public static final String CATEGORY = "category";
+
+    public CouponInfo(String key, String name, String address, List<String> category) {
         this.key = key;
-        this.companyName = companyName;
+        this.name = name;
         this.address = address;
         this.category = category;
     }
@@ -19,8 +23,8 @@ public class CouponInfo {
         return key;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getName() {
+        return name;
     }
 
     public String getAddress() {

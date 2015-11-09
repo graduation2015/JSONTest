@@ -24,7 +24,7 @@ public class JsonManager {
 
     private Context context;
     private File file;
-    private WriteJsonManager writeJsonManager;
+    private JsonDataWriter jsonDataWriter;
 
     public JsonManager(Context context) {
         this.context = context;
@@ -32,7 +32,7 @@ public class JsonManager {
         File dir = createExternalStorageDir(context, Environment.DIRECTORY_DOCUMENTS);
         file = new File(dir, FILE_NAME);
 
-        writeJsonManager = new WriteJsonManager();
+        jsonDataWriter = new JsonDataWriter();
 
         // jsonファイルがない場合作る
         if (!file.exists()) {
@@ -66,7 +66,7 @@ public class JsonManager {
      *
      * @return
      */
-    public JSONObject getJsonObject() {
+    public JSONObject getJsonRootObject() {
         JSONObject jsonObject = null;
 
         try {
@@ -138,9 +138,9 @@ public class JsonManager {
      * JSONファイルに書き込む
      * @param json
      */
-    public void putJsonStr(String json) {
+    private void putJsonStr(String json) {
         try {
-            FileOutputStream outputStream = new FileOutputStream(file, true);
+            FileOutputStream outputStream = new FileOutputStream(file, false);
             outputStream.write(json.getBytes());
             outputStream.close();
         } catch (IOException e) {
@@ -150,10 +150,10 @@ public class JsonManager {
 
     public void putJsonStr(CouponInfo info) {
         try {
-            FileOutputStream outputStream = new FileOutputStream(file, true);
-            writeJsonManager.writeJsonStream(outputStream, info);
+            FileOutputStream outputStream = new FileOutputStream(file, false);
+            jsonDataWriter.writeJson(outputStream, getJsonRootObject(), info);
             outputStream.close();
-        } catch (IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
     }

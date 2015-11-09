@@ -48,7 +48,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     }
 
     private void loadJSON() {
-        JSONObject object = jsonManager.getJsonObject();
+        JSONObject object = jsonManager.getJsonRootObject();
         executeCategoryFilter(object);
     }
 

@@ -23,6 +23,7 @@ public class CategoryChoiceDialog extends DialogFragment {
         String[] items = getArguments().getStringArray(ITEMS);
         boolean[] checkedItems = getArguments().getBooleanArray(CHECKED_ITEMS);
 
+        setCancelable(false);
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Select category")
                 .setMultiChoiceItems(items, checkedItems, makeMultiChoiceClickListener(items, checkedItems))
