@@ -21,6 +21,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     private List<String> items = new ArrayList<>();
     private EditText filter;
     private JsonManager jsonManager;
+    private JsonDataReader jsonDataReader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,10 +34,10 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
         filter = (EditText) contentView.findViewById(R.id.edit_filter);
 
         jsonManager = new JsonManager(getActivity());
+        jsonDataReader = new JsonDataReader();
 
         return contentView;
     }
-
 
     @Override
     public void onClick(View view) {
@@ -48,59 +49,19 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     }
 
     private void loadJSON() {
-        JSONObject object = jsonManager.getJsonRootObject();
-        executeCategoryFilter(object);
+        JSONObject rootObject = jsonManager.getJsonRootObject();
+        executeCategoryFilter(rootObject);
     }
 
-    private void executeCategoryFilter(JSONObject object) {
-        if (object == null) {
-            return;
-        }
-
-        items.clear();
-        JSONArray names = object.names();
-
-        if (names != null) {
-            for (int i = 0; i < names.length(); i++) {
-                JSONArray category = getValues(object, names, i, "category");
-                for (int j = 0; j < category.length(); j++) {
-                    // フィルターに入力されたタグが付いている画像名をリストに追加
-                    if (categoryExists(category, j, filter.getText().toString())) {
-                        addItems(items, names, i);
-                    }
-                }
-            }
-        }
+    private void executeCategoryFilter(JSONObject rootObject) {
+        jsonDataReader.executeFilter(rootObject, getFilter(), CouponInfo.CATEGORY, items);
 
         //リスト更新
         ((ArrayAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
-    private JSONArray getValues(JSONObject object, JSONArray names, int position, String key) {
-        JSONArray values = null;
-        try {
-            values = object.getJSONObject(names.getString(position)).getJSONArray(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return values;
+    private String getFilter() {
+        return filter.getText().toString();
     }
 
-    private boolean categoryExists(JSONArray category, int position, String filter) {
-        try {
-            return category.getString(position).equals(filter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private void addItems(List<String> items, JSONArray names, int position) {
-        try {
-            items.add(names.getString(position));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 }
