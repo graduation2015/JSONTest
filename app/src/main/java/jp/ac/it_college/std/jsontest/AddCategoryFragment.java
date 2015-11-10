@@ -1,6 +1,7 @@
 package jp.ac.it_college.std.jsontest;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,13 +37,8 @@ public class AddCategoryFragment extends Fragment
         findViews(contentView);
 
         jsonManager = new JsonManager(getActivity());
+        dialog = CategoryChoiceDialog.newInstance(this);
         return contentView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        dialog = makeCategoryChoiceDialog();
     }
 
     @Override
@@ -105,20 +101,4 @@ public class AddCategoryFragment extends Fragment
         jsonManager.putJsonStr(rootObject, info);
     }
 
-    private CategoryChoiceDialog makeCategoryChoiceDialog() {
-        CategoryChoiceDialog dialog = new CategoryChoiceDialog();
-        dialog.setTargetFragment(this, REQUEST_CATEGORY);
-        dialog.setArguments(makeArgs());
-        return dialog;
-    }
-
-    private Bundle makeArgs() {
-        Bundle args = new Bundle();
-        String[] items = getResources().getStringArray(R.array.categories);
-        boolean[] checkedItems = new boolean[items.length];
-        args.putStringArray(CategoryChoiceDialog.ITEMS, items);
-        args.putBooleanArray(CategoryChoiceDialog.CHECKED_ITEMS, checkedItems);
-
-        return args;
-    }
 }

@@ -3,6 +3,8 @@ package jp.ac.it_college.std.jsontest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
@@ -17,6 +19,25 @@ public class CategoryChoiceDialog extends DialogFragment {
     public static final String CHECKED_ITEMS = "checkedItems";
     public static final String ITEMS = "items";
     public static final String TAG = "CategoryChoiceDialog";
+    public static final int REQUEST_CATEGORY = 0x01;
+
+
+    public static CategoryChoiceDialog newInstance(Fragment targetFragment) {
+        CategoryChoiceDialog dialog = new CategoryChoiceDialog();
+        dialog.setTargetFragment(targetFragment, REQUEST_CATEGORY);
+        dialog.setArguments(dialog.makeArgs(targetFragment.getActivity()));
+        return dialog;
+    }
+
+    private Bundle makeArgs(Context context) {
+        Bundle args = new Bundle();
+        String[] items = context.getResources().getStringArray(R.array.categories);
+        boolean[] checkedItems = new boolean[items.length];
+        args.putStringArray(CategoryChoiceDialog.ITEMS, items);
+        args.putBooleanArray(CategoryChoiceDialog.CHECKED_ITEMS, checkedItems);
+
+        return args;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
