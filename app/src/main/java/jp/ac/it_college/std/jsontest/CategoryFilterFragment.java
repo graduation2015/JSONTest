@@ -22,12 +22,14 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     private EditText filter;
     private JsonManager jsonManager;
     private JsonDataReader jsonDataReader;
+    private CategoryChoiceDialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_category_filter, container, false);
         contentView.findViewById(R.id.btn_load_json).setOnClickListener(this);
+        contentView.findViewById(R.id.btn_select_category).setOnClickListener(this);
         setListAdapter(new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_list_item_1, items));
 
@@ -35,6 +37,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
         jsonManager = new JsonManager(getActivity());
         jsonDataReader = new JsonDataReader();
+        dialog = CategoryChoiceDialog.newInstance(this);
 
         return contentView;
     }
@@ -44,6 +47,9 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
         switch (view.getId()) {
             case R.id.btn_load_json:
                 loadJSON();
+                break;
+            case R.id.btn_select_category:
+                showCategoryChoiceDialog();
                 break;
         }
     }
@@ -62,6 +68,10 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
 
     private String getFilter() {
         return filter.getText().toString();
+    }
+
+    private void showCategoryChoiceDialog() {
+        dialog.show(getFragmentManager(), "dialog");
     }
 
 }

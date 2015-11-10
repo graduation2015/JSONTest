@@ -12,6 +12,13 @@
         android:hint="Category filter" />
 
     <Button
+        android:id="@+id/btn_select_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category Select"
+        />
+
+    <Button
         android:id="@+id/btn_load_json"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
