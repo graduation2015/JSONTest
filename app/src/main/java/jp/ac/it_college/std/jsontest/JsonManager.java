@@ -18,8 +18,8 @@ import java.io.InputStream;
 public class JsonManager {
 
     private static final String FILE_NAME = "info.json";
-    public static final String TAG = "JsonManager";
     public static final String TEMPLATE_FILE = "template.json";
+    public static final String TAG = "JsonManager";
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     private Context context;
@@ -70,7 +70,8 @@ public class JsonManager {
         JSONObject jsonObject = null;
 
         try {
-            jsonObject = new JSONObject(getJsonStr(new FileInputStream(file)));
+            InputStream is = new FileInputStream(file);
+            jsonObject = new JSONObject(getJsonStr(is));
         } catch (JSONException | FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -148,10 +149,10 @@ public class JsonManager {
         }
     }
 
-    public void putJsonStr(CouponInfo info) {
+    public void putJsonStr(JSONObject rootObj, CouponInfo info) {
         try {
             FileOutputStream outputStream = new FileOutputStream(file, false);
-            jsonDataWriter.writeJson(outputStream, getJsonRootObject(), info);
+            jsonDataWriter.writeJson(outputStream, rootObj, info);
             outputStream.close();
         } catch (JSONException | IOException e) {
             e.printStackTrace();

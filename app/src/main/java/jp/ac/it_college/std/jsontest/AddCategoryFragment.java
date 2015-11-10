@@ -94,11 +94,15 @@ public class AddCategoryFragment extends Fragment
         dialog.show(getFragmentManager(), "dialog");
     }
 
+    /**
+     * JSONファイルにJSONオブジェクトを追加/更新
+     */
     private void addCategory() {
+        JSONObject rootObject = jsonManager.getJsonRootObject();
         CouponInfo info = new CouponInfo(
                 getKeyName(), COMPANY_NAME, COMPANY_ADDRESS, getCategories());
 
-        jsonManager.putJsonStr(info);
+        jsonManager.putJsonStr(rootObject, info);
     }
 
     private CategoryChoiceDialog makeCategoryChoiceDialog() {
