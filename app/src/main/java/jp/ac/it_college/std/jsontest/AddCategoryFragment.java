@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.jsontest;
 
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +22,7 @@ public class AddCategoryFragment extends Fragment
     private JsonManager jsonManager;
 
     private List<String> categories = new ArrayList<>();
-    private CategoryChoiceDialog dialog;
-    public static final int REQUEST_CATEGORY = 0x01;
+    private ChoiceDialog multipleChoiceDialog;
     private static final String COMPANY_NAME = "company01";
     private static final String COMPANY_ADDRESS = "okinawa";
 
@@ -37,7 +35,7 @@ public class AddCategoryFragment extends Fragment
         findViews(contentView);
 
         jsonManager = new JsonManager(getActivity());
-        dialog = CategoryChoiceDialog.newInstance(this);
+        multipleChoiceDialog = ChoiceDialog.newInstance(this, new CategoryMultipleChoiceDialog());
         return contentView;
     }
 
@@ -47,7 +45,7 @@ public class AddCategoryFragment extends Fragment
             case R.id.btn_add_category:
                 addCategory();
                 break;
-            case R.id.btn_select_category:
+            case R.id.btn_select_category_multiple:
                 showCategoryChoiceDialog();
                 break;
         }
@@ -57,7 +55,7 @@ public class AddCategoryFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CATEGORY) {
+        if (requestCode == CategoryMultipleChoiceDialog.REQUEST_CATEGORY) {
             switch (resultCode) {
                 case DialogInterface.BUTTON_POSITIVE:
                     setCategories(data);
@@ -67,7 +65,8 @@ public class AddCategoryFragment extends Fragment
     }
 
     private void setCategories(Intent data) {
-        List<String> checkedCategories = data.getStringArrayListExtra(CategoryChoiceDialog.CHECKED_ITEMS);
+        List<String> checkedCategories =
+                data.getStringArrayListExtra(CategoryMultipleChoiceDialog.CHECKED_ITEMS);
         categories.clear();
         categories.addAll(checkedCategories);
     }
@@ -82,12 +81,12 @@ public class AddCategoryFragment extends Fragment
 
     private void findViews(View contentView) {
         contentView.findViewById(R.id.btn_add_category).setOnClickListener(this);
-        contentView.findViewById(R.id.btn_select_category).setOnClickListener(this);
+        contentView.findViewById(R.id.btn_select_category_multiple).setOnClickListener(this);
         keyName = (EditText) contentView.findViewById(R.id.edit_key_name);
     }
 
     private void showCategoryChoiceDialog() {
-        dialog.show(getFragmentManager(), "dialog");
+        multipleChoiceDialog.show(getFragmentManager(), "multipleChoiceDialog");
     }
 
     /**

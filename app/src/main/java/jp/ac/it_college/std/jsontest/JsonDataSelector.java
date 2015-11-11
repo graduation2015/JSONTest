@@ -6,10 +6,15 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class JsonDataReader {
+public class JsonDataSelector {
 
     public void executeFilter(JSONObject rootObj, String filter, String target, List<String> items) {
         executeFilter(rootObj, rootObj.names(), filter, target, items);
+    }
+
+    public void executeFilter(
+            JSONObject rootObj, List<String> filters, String target, List<String> items) {
+        executeListFilter(rootObj, rootObj.names(), filters, target, items);
     }
 
     private void executeFilter(JSONObject rootObj, JSONArray names,
@@ -18,15 +23,21 @@ public class JsonDataReader {
             return;
         }
 
-        items.clear();
         for (int i = 0; i < names.length(); i++) {
-            JSONArray category = getValues(rootObj, names, i, target);
-            for (int j = 0; j < category.length(); j++) {
-                // フィルターに入力されたタグが付いている画像名をリストに追加
-                if (categoryExists(category, j, filter)) {
-                    addItems(items, names, i);
+            JSONArray values = getValues(rootObj, names, i, target);
+            for (int j = 0; j < values.length(); j++) {
+                // フィルターに入力されたタグが付いているKeyをリストに追加
+                if (valueExists(values, j, filter)) {
+                    addValue(items, names, i);
                 }
             }
+        }
+    }
+
+    private void executeListFilter(JSONObject rootObj, JSONArray names,
+                               List<String> filters, String target, List<String> items) {
+        if (rootObj == null || names == null) {
+            return;
         }
     }
 
@@ -41,16 +52,16 @@ public class JsonDataReader {
         return values;
     }
 
-    private boolean categoryExists(JSONArray category, int position, String filter) {
+    private boolean valueExists(JSONArray values, int position, String filter) {
         try {
-            return category.getString(position).equals(filter);
+            return values.getString(position).equals(filter);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    private void addItems(List<String> items, JSONArray names, int position) {
+    private void addValue(List<String> items, JSONArray names, int position) {
         try {
             items.add(names.getString(position));
         } catch (JSONException e) {

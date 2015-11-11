@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class JsonManager {
 
@@ -25,6 +26,7 @@ public class JsonManager {
     private Context context;
     private File file;
     private JsonDataWriter jsonDataWriter;
+    private JsonDataSelector jsonDataSelector;
 
     public JsonManager(Context context) {
         this.context = context;
@@ -33,6 +35,7 @@ public class JsonManager {
         file = new File(dir, FILE_NAME);
 
         jsonDataWriter = new JsonDataWriter();
+        jsonDataSelector = new JsonDataSelector();
 
         // jsonファイルがない場合作る
         if (!file.exists()) {
@@ -157,6 +160,16 @@ public class JsonManager {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void executeListFilter(
+            JSONObject rootObject, List<String> filters, String target, List<String> items) {
+        jsonDataSelector.executeFilter(rootObject, filters, target, items);
+    }
+
+    public void executeFilter(
+            JSONObject rootObject, String filter, String target, List<String> items) {
+        jsonDataSelector.executeFilter(rootObject, filter, target, items);
     }
 
 }

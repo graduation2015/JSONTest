@@ -5,17 +5,18 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/edit_filter"
+    <Button
+        android:id="@+id/btn_select_category_single"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Category filter" />
+        android:text="Single Select"
+        />
 
     <Button
-        android:id="@+id/btn_select_category"
+        android:id="@+id/btn_select_category_multiple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Category Select"
+        android:text="Multiple Select"
         />
 
     <Button
