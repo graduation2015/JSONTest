@@ -8,15 +8,33 @@ import java.util.List;
 
 public class JsonDataSelector {
 
+    //SingleChoiceDialog用
     public void executeFilter(JSONObject rootObj, String filter, String target, List<String> items) {
         executeFilter(rootObj, rootObj.names(), filter, target, items);
     }
 
+    //リスト(MultipleChoiceDialog)用
     public void executeFilter(
             JSONObject rootObj, List<String> filters, String target, List<String> items) {
         executeListFilter(rootObj, rootObj.names(), filters, target, items);
     }
 
+    //リスト(MultipleChoiceDialog)用
+    private void executeListFilter(JSONObject rootObj, JSONArray names,
+                                   List<String> filters, String target, List<String> items) {
+        if (rootObj == null || names == null) {
+            return;
+        }
+    }
+
+    /**
+     * フィルターを実行後リストにアイテムを追加
+     * @param rootObj
+     * @param names
+     * @param filter
+     * @param target
+     * @param items
+     */
     private void executeFilter(JSONObject rootObj, JSONArray names,
                                String filter, String target, List<String> items) {
         if (rootObj == null || names == null) {
@@ -24,7 +42,7 @@ public class JsonDataSelector {
         }
 
         for (int i = 0; i < names.length(); i++) {
-            JSONArray values = getValues(rootObj, names, i, target);
+            JSONArray values = getValues(rootObj, names, i, target); //カテゴリを取得
             for (int j = 0; j < values.length(); j++) {
                 // フィルターに入力されたタグが付いているKeyをリストに追加
                 if (valueExists(values, j, filter)) {
@@ -34,13 +52,14 @@ public class JsonDataSelector {
         }
     }
 
-    private void executeListFilter(JSONObject rootObj, JSONArray names,
-                               List<String> filters, String target, List<String> items) {
-        if (rootObj == null || names == null) {
-            return;
-        }
-    }
-
+    /**
+     * カテゴリを取得
+     * @param object
+     * @param names
+     * @param position
+     * @param key
+     * @return
+     */
     private JSONArray getValues(JSONObject object, JSONArray names, int position, String key) {
         JSONArray values = null;
         try {
@@ -52,6 +71,13 @@ public class JsonDataSelector {
         return values;
     }
 
+    /**
+     * フィルターで指定された値の有無をチェック
+     * @param values
+     * @param position
+     * @param filter
+     * @return
+     */
     private boolean valueExists(JSONArray values, int position, String filter) {
         try {
             return values.getString(position).equals(filter);
@@ -61,6 +87,12 @@ public class JsonDataSelector {
         }
     }
 
+    /**
+     * リストにアイテムを追加
+     * @param items
+     * @param names
+     * @param position
+     */
     private void addValue(List<String> items, JSONArray names, int position) {
         try {
             items.add(names.getString(position));

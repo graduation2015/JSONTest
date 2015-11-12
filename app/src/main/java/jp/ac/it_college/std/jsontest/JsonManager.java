@@ -19,7 +19,6 @@ import java.util.List;
 public class JsonManager {
 
     private static final String FILE_NAME = "info.json";
-    public static final String TEMPLATE_FILE = "template.json";
     public static final String TAG = "JsonManager";
 
     private Context context;
@@ -40,7 +39,12 @@ public class JsonManager {
 
         // jsonファイルがない場合作る
         if (!file.exists()) {
-            initJsonFile();
+            try {
+                jsonDataWriter.initJsonObj(file);
+                Toast.makeText(context, "JSON file was created", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -67,26 +71,6 @@ public class JsonManager {
     }
 
     /**
-     * 外部ストレージに空のJSONファイルを新しく作成する
-     *
-     * @return
-     */
-    private void initJsonFile() {
-        if (isExternalStorageWritable()) {
-            InputStream template = null;
-
-            try {
-                template = context.getAssets().open(TEMPLATE_FILE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            putJsonStr(jsonDataReader.getJsonStr(template));
-            Toast.makeText(context, "File was created", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
      * 外部ストレージにディレクトリを作成する
      *
      * @param context
@@ -97,7 +81,7 @@ public class JsonManager {
         File file = new File(context.getExternalFilesDir(dirType).getPath());
 
         if (!file.mkdirs()) {
-            Log.d(TAG, "Directory not created");
+            Toast.makeText(context, "File already exists", Toast.LENGTH_SHORT).show();
         }
 
         return file;
@@ -122,22 +106,7 @@ public class JsonManager {
                 || Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState());
     }
 
-    /**
-     * JSONファイルに書き込む
-     * @param json
-     */
-    private void putJsonStr(String json) {
-/*        try {
-            FileOutputStream outputStream = new FileOutputStream(file, false);
-            outputStream.write(json.getBytes());
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        jsonDataWriter.putJsonStr(getFile(), json);
-    }
-
-    public void putJsonStr(JSONObject rootObj, CouponInfo info) {
+    public void putJsonObj(JSONObject rootObj, CouponInfo info) {
         try {
             FileOutputStream outputStream = new FileOutputStream(file, false);
             jsonDataWriter.writeJson(outputStream, rootObj, info);
@@ -147,6 +116,7 @@ public class JsonManager {
         }
     }
 
+    //リスト用
     public void executeListFilter(
             JSONObject rootObject, List<String> filters, String target, List<String> items) {
         jsonDataSelector.executeFilter(rootObject, filters, target, items);

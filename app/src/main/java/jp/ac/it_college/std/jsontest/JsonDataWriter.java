@@ -29,18 +29,12 @@ public class JsonDataWriter {
     }
 
     /**
-     * JSONファイルに書き込む
-     * @param json
+     * 外部ストレージに空のJSONファイルを新しく作成する
      */
-    protected void putJsonStr(File file, String json) {
-        try {
-            FileOutputStream outputStream = new FileOutputStream(file, false);
-            outputStream.write(json.getBytes());
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void initJsonObj(File file) throws IOException {
+        FileOutputStream outputStream = new FileOutputStream(file, false);
+        outputStream.write(new JSONObject().toString().getBytes());
+        outputStream.close();
     }
-
 
 }

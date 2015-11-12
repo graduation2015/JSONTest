@@ -97,7 +97,7 @@ public class AddCategoryFragment extends Fragment
         CouponInfo info = new CouponInfo(
                 getKeyName(), COMPANY_NAME, COMPANY_ADDRESS, getCategories());
 
-        jsonManager.putJsonStr(rootObject, info);
+        jsonManager.putJsonObj(rootObject, info);
     }
 
 }
