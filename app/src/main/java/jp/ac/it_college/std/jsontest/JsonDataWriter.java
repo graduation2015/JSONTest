@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -25,5 +27,20 @@ public class JsonDataWriter {
 
         return data;
     }
+
+    /**
+     * JSONファイルに書き込む
+     * @param json
+     */
+    protected void putJsonStr(File file, String json) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file, false);
+            outputStream.write(json.getBytes());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

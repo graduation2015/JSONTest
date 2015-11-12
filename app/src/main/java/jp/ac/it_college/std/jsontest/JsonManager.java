@@ -44,6 +44,10 @@ public class JsonManager {
         }
     }
 
+    public File getFile() {
+        return file;
+    }
+
     /**
      * JSONオブジェクトを返す
      *
@@ -53,7 +57,7 @@ public class JsonManager {
         JSONObject jsonObject = null;
 
         try {
-            InputStream is = new FileInputStream(file);
+            InputStream is = new FileInputStream(getFile());
             jsonObject = new JSONObject(jsonDataReader.getJsonStr(is));
         } catch (JSONException | FileNotFoundException e) {
             e.printStackTrace();
@@ -123,13 +127,14 @@ public class JsonManager {
      * @param json
      */
     private void putJsonStr(String json) {
-        try {
+/*        try {
             FileOutputStream outputStream = new FileOutputStream(file, false);
             outputStream.write(json.getBytes());
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        jsonDataWriter.putJsonStr(getFile(), json);
     }
 
     public void putJsonStr(JSONObject rootObj, CouponInfo info) {
