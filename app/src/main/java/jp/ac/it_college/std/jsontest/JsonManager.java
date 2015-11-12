@@ -21,12 +21,12 @@ public class JsonManager {
     private static final String FILE_NAME = "info.json";
     public static final String TEMPLATE_FILE = "template.json";
     public static final String TAG = "JsonManager";
-    public static final String DEFAULT_ENCODING = "UTF-8";
 
     private Context context;
     private File file;
     private JsonDataWriter jsonDataWriter;
     private JsonDataSelector jsonDataSelector;
+    private JsonDataReader jsonDataReader;
 
     public JsonManager(Context context) {
         this.context = context;
@@ -36,32 +36,12 @@ public class JsonManager {
 
         jsonDataWriter = new JsonDataWriter();
         jsonDataSelector = new JsonDataSelector();
+        jsonDataReader = new JsonDataReader();
 
         // jsonファイルがない場合作る
         if (!file.exists()) {
             initJsonFile();
         }
-    }
-
-    /**
-     * JSONファイルを読み込み文字列で返す
-     *
-     * @param is
-     * @return
-     */
-    private String getJsonStr(InputStream is) {
-        String json = null;
-        try {
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-
-            json = new String(buffer, DEFAULT_ENCODING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return json;
     }
 
     /**
@@ -74,7 +54,7 @@ public class JsonManager {
 
         try {
             InputStream is = new FileInputStream(file);
-            jsonObject = new JSONObject(getJsonStr(is));
+            jsonObject = new JSONObject(jsonDataReader.getJsonStr(is));
         } catch (JSONException | FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -97,7 +77,7 @@ public class JsonManager {
                 e.printStackTrace();
             }
 
-            putJsonStr(getJsonStr(template));
+            putJsonStr(jsonDataReader.getJsonStr(template));
             Toast.makeText(context, "File was created", Toast.LENGTH_SHORT).show();
         }
     }
