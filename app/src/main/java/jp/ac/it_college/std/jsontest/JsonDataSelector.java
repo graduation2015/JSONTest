@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class JsonDataSelector {
@@ -99,6 +101,51 @@ public class JsonDataSelector {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<CouponInfo> getCouponInfoList(JSONObject rootObj) {
+        List<CouponInfo> list = new ArrayList<>();
+        Iterator<String> iterator = rootObj.keys();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            try {
+                JSONObject object = rootObj.getJSONObject(key);
+                list.add(createCouponInfo(key, object));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return list;
+    }
+
+    private CouponInfo createCouponInfo(String key, JSONObject object) {
+        String name = null, address = null;
+        List<String> category = new ArrayList<>();
+        try {
+            name = object.getString(CouponInfo.NAME);
+            address  = object.getString(CouponInfo.ADDRESS);
+            category = createList(object.getJSONArray(CouponInfo.CATEGORY));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return new CouponInfo(key, name, address, category);
+    }
+
+    private List<String> createList(JSONArray category) {
+        List<String> list = new ArrayList<>();
+
+        for (int i = 0; i < category.length(); i++) {
+            try {
+                list.add(category.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
     }
 
 }

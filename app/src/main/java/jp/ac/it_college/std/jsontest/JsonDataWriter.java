@@ -19,6 +19,10 @@ public class JsonDataWriter {
         out.write(rootObject.toString(DEFAULT_INDENT_SPACE).getBytes());
     }
 
+    public void writeJson(OutputStream out, JSONObject rootObject) throws JSONException, IOException {
+        out.write(rootObject.toString(DEFAULT_INDENT_SPACE).getBytes());
+    }
+
     private JSONObject writeData(CouponInfo info) throws JSONException {
         JSONObject data = new JSONObject();
         data.put(CouponInfo.NAME, info.getName());

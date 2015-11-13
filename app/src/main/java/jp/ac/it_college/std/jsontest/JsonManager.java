@@ -2,7 +2,6 @@ package jp.ac.it_college.std.jsontest;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -26,6 +25,7 @@ public class JsonManager {
     private JsonDataWriter jsonDataWriter;
     private JsonDataSelector jsonDataSelector;
     private JsonDataReader jsonDataReader;
+    private JsonDataRemover jsonDataRemover;
 
     public JsonManager(Context context) {
         this.context = context;
@@ -36,6 +36,7 @@ public class JsonManager {
         jsonDataWriter = new JsonDataWriter();
         jsonDataSelector = new JsonDataSelector();
         jsonDataReader = new JsonDataReader();
+        jsonDataRemover = new JsonDataRemover();
 
         // jsonファイルがない場合作る
         if (!file.exists()) {
@@ -108,7 +109,7 @@ public class JsonManager {
 
     public void putJsonObj(JSONObject rootObj, CouponInfo info) {
         try {
-            FileOutputStream outputStream = new FileOutputStream(file, false);
+            FileOutputStream outputStream = new FileOutputStream(getFile(), false);
             jsonDataWriter.writeJson(outputStream, rootObj, info);
             outputStream.close();
         } catch (JSONException | IOException e) {
@@ -127,4 +128,27 @@ public class JsonManager {
         jsonDataSelector.executeFilter(rootObject, filter, target, items);
     }
 
+    /**
+     * JSONオブジェクトからCouponInfoのリストを取得
+     * @return
+     */
+    public List<CouponInfo> getCouponInfoList() {
+        return jsonDataSelector.getCouponInfoList(getJsonRootObject());
+    }
+
+    /**
+     * 指定されたキーのオブジェクトを削除
+     * @param key
+     */
+    public void removeObject(String key) {
+        JSONObject removedObject = jsonDataRemover.remove(getJsonRootObject(), key);
+        try {
+            FileOutputStream outputStream = new FileOutputStream(getFile(), false);
+            jsonDataWriter.writeJson(outputStream, removedObject);
+            outputStream.close();
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
