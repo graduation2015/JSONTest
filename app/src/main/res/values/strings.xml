@@ -13,4 +13,8 @@
         <item>Food</item>
     </string-array>
 
+    <string-array name="action_menu_items">
+        <item>Delete</item>
+    </string-array>
+
 </resources>

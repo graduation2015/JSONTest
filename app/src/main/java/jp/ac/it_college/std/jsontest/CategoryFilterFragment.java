@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 
 import org.json.JSONObject;
 
@@ -100,7 +99,7 @@ public class CategoryFilterFragment extends ListFragment implements View.OnClick
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CategoryMultipleChoiceDialog.REQUEST_CATEGORY) {
+        if (requestCode == CategoryMultipleChoiceDialog.REQUEST_ITEMS) {
             switch (resultCode) {
                 case DialogInterface.BUTTON_POSITIVE:
                     setCategories(data);

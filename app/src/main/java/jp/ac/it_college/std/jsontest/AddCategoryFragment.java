@@ -55,7 +55,7 @@ public class AddCategoryFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CategoryMultipleChoiceDialog.REQUEST_CATEGORY) {
+        if (requestCode == CategoryMultipleChoiceDialog.REQUEST_ITEMS) {
             switch (resultCode) {
                 case DialogInterface.BUTTON_POSITIVE:
                     setCategories(data);
